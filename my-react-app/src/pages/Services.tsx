@@ -5,7 +5,6 @@ import Section from '@/components/ui/Section';
 import { Link } from 'react-router-dom';
 import { Car, Hotel, Plane, Compass, ArrowRight, Map, Shield, Users, Heart } from 'lucide-react';
 import api from '@/lib/api';
-import { getWhatsAppLink } from '@/lib/utils';
 
 // Icon mapping
 const iconMap: Record<string, any> = {
