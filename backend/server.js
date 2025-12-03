@@ -13,9 +13,24 @@ const contentRoutes = require('./routes/content');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// CORS Configuration
+// Parse allowed origins from environment variable (comma-separated)
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+    : ['http://localhost:5173']; // Default to localhost for development
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Vite default port
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.warn(`CORS blocked request from origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }));
 app.use(express.json());
@@ -81,6 +96,7 @@ app.listen(PORT, () => {
     console.log(`🔗 API URL: http://localhost:${PORT}`);
     console.log(`✅ Sanity Project: ${process.env.SANITY_PROJECT_ID}`);
     console.log(`☁️  Cloudinary Cloud: ${process.env.CLOUDINARY_CLOUD_NAME}`);
+    console.log(`🌐 Allowed CORS Origins: ${allowedOrigins.join(', ')}`);
 });
 
 module.exports = app;
