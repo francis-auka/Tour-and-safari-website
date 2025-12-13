@@ -3,7 +3,7 @@ import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
-import { Anchor, Sun, Wine, Ship } from 'lucide-react';
+import { Anchor, Sun, Wine } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CruiseHoliday = () => {

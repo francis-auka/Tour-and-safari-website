@@ -3,7 +3,7 @@ import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
-import { Zap, Wind, Waves, Bike } from 'lucide-react';
+import { Wind, Waves, Bike } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const AdventurePackages = () => {
