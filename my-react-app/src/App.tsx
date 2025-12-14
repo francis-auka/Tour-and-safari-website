@@ -1,32 +1,35 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import Home from '@/pages/Home';
-import Tours from '@/pages/Tours';
-import TourDetail from '@/pages/TourDetail';
-import Destinations from '@/pages/Destinations';
-import DestinationDetail from '@/pages/DestinationDetail';
-import RegionDestinations from '@/pages/RegionDestinations';
-import Services from '@/pages/Services';
-import Transport from '@/pages/services/Transport';
-import Hotels from '@/pages/services/Hotels';
-import HotelBooking from '@/pages/services/HotelBooking';
-import WildlifeSafaris from '@/pages/packages/WildlifeSafaris';
-import MountainClimbing from '@/pages/packages/MountainClimbing';
-import CruiseHoliday from '@/pages/packages/CruiseHoliday';
-import AdventurePackages from '@/pages/packages/AdventurePackages';
-import Pilgrimages from '@/pages/packages/Pilgrimages';
-import CorporateTrips from '@/pages/packages/CorporateTrips';
-import Flights from '@/pages/services/Flights';
-import Visa from '@/pages/services/Visa';
-import CustomItineraries from '@/pages/services/CustomItineraries';
-import Contact from '@/pages/Contact';
-import Blog from '@/pages/Blog';
-import BlogPost from '@/pages/BlogPost';
-import Quiz from '@/pages/Quiz';
-import PackageCategory from '@/pages/PackageCategory';
-import AccommodationCategory from '@/pages/AccommodationCategory';
-import Company from '@/pages/Company';
 import ScrollToTop from '@/components/ScrollToTop';
+import LoadingScreen from '@/components/ui/LoadingScreen';
+
+// Lazy load pages
+const Tours = lazy(() => import('@/pages/Tours'));
+const TourDetail = lazy(() => import('@/pages/TourDetail'));
+const Destinations = lazy(() => import('@/pages/Destinations'));
+const DestinationDetail = lazy(() => import('@/pages/DestinationDetail'));
+const RegionDestinations = lazy(() => import('@/pages/RegionDestinations'));
+const Services = lazy(() => import('@/pages/Services'));
+const Transport = lazy(() => import('@/pages/services/Transport'));
+const Hotels = lazy(() => import('@/pages/services/Hotels'));
+const HotelBooking = lazy(() => import('@/pages/services/HotelBooking'));
+const Flights = lazy(() => import('@/pages/services/Flights'));
+const Visa = lazy(() => import('@/pages/services/Visa'));
+const CustomItineraries = lazy(() => import('@/pages/services/CustomItineraries'));
+const WildlifeSafaris = lazy(() => import('@/pages/packages/WildlifeSafaris'));
+const MountainClimbing = lazy(() => import('@/pages/packages/MountainClimbing'));
+const CruiseHoliday = lazy(() => import('@/pages/packages/CruiseHoliday'));
+const AdventurePackages = lazy(() => import('@/pages/packages/AdventurePackages'));
+const Pilgrimages = lazy(() => import('@/pages/packages/Pilgrimages'));
+const CorporateTrips = lazy(() => import('@/pages/packages/CorporateTrips'));
+const Contact = lazy(() => import('@/pages/Contact'));
+const Blog = lazy(() => import('@/pages/Blog'));
+const BlogPost = lazy(() => import('@/pages/BlogPost'));
+const Quiz = lazy(() => import('@/pages/Quiz'));
+const PackageCategory = lazy(() => import('@/pages/PackageCategory'));
+const AccommodationCategory = lazy(() => import('@/pages/AccommodationCategory'));
+const Company = lazy(() => import('@/pages/Company'));
 
 // Component to handle redirects with hash navigation
 const CompanyRedirect = ({ section }: { section: string }) => {
@@ -53,48 +56,50 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tours" element={<Tours />} />
-        <Route path="/tours/:id" element={<TourDetail />} />
-        <Route path="/destinations" element={<Destinations />} />
-        <Route path="/regions/:region" element={<RegionDestinations />} />
-        <Route path="/destinations/:id" element={<DestinationDetail />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/transport" element={<Transport />} />
-        <Route path="/services/hotels" element={<Hotels />} />
-        <Route path="/services/hotel-booking" element={<HotelBooking />} />
-        <Route path="/services/flights" element={<Flights />} />
-        <Route path="/services/airticketing" element={<Flights />} /> {/* Alias for dropdown link */}
-        <Route path="/services/visa" element={<Visa />} />
-        <Route path="/services/custom-itineraries" element={<CustomItineraries />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:id" element={<BlogPost />} />
-        <Route path="/quiz" element={<Quiz />} />
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tours" element={<Tours />} />
+          <Route path="/tours/:id" element={<TourDetail />} />
+          <Route path="/destinations" element={<Destinations />} />
+          <Route path="/regions/:region" element={<RegionDestinations />} />
+          <Route path="/destinations/:id" element={<DestinationDetail />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/services/transport" element={<Transport />} />
+          <Route path="/services/hotels" element={<Hotels />} />
+          <Route path="/services/hotel-booking" element={<HotelBooking />} />
+          <Route path="/services/flights" element={<Flights />} />
+          <Route path="/services/airticketing" element={<Flights />} /> {/* Alias for dropdown link */}
+          <Route path="/services/visa" element={<Visa />} />
+          <Route path="/services/custom-itineraries" element={<CustomItineraries />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/quiz" element={<Quiz />} />
 
-        {/* Company Page - Consolidated */}
-        <Route path="/company" element={<Company />} />
+          {/* Company Page - Consolidated */}
+          <Route path="/company" element={<Company />} />
 
-        {/* Redirects for old company section pages */}
-        <Route path="/about" element={<CompanyRedirect section="about" />} />
-        <Route path="/calling" element={<CompanyRedirect section="calling" />} />
-        <Route path="/impact" element={<CompanyRedirect section="impact" />} />
-        <Route path="/faqs" element={<CompanyRedirect section="faqs" />} />
-        <Route path="/testimonials" element={<CompanyRedirect section="testimonials" />} />
+          {/* Redirects for old company section pages */}
+          <Route path="/about" element={<CompanyRedirect section="about" />} />
+          <Route path="/calling" element={<CompanyRedirect section="calling" />} />
+          <Route path="/impact" element={<CompanyRedirect section="impact" />} />
+          <Route path="/faqs" element={<CompanyRedirect section="faqs" />} />
+          <Route path="/testimonials" element={<CompanyRedirect section="testimonials" />} />
 
-        {/* Themed Packages */}
-        <Route path="/packages/wildlife" element={<WildlifeSafaris />} />
-        <Route path="/packages/climbing" element={<MountainClimbing />} />
-        <Route path="/packages/cruise" element={<CruiseHoliday />} />
-        <Route path="/packages/adventure" element={<AdventurePackages />} />
-        <Route path="/packages/pilgrimages" element={<Pilgrimages />} />
-        <Route path="/packages/corporate" element={<CorporateTrips />} />
+          {/* Themed Packages */}
+          <Route path="/packages/wildlife" element={<WildlifeSafaris />} />
+          <Route path="/packages/climbing" element={<MountainClimbing />} />
+          <Route path="/packages/cruise" element={<CruiseHoliday />} />
+          <Route path="/packages/adventure" element={<AdventurePackages />} />
+          <Route path="/packages/pilgrimages" element={<Pilgrimages />} />
+          <Route path="/packages/corporate" element={<CorporateTrips />} />
 
-        {/* Dynamic Categories */}
-        <Route path="/packages/:category" element={<PackageCategory />} />
-        <Route path="/accommodation/:type" element={<AccommodationCategory />} />
-      </Routes>
+          {/* Dynamic Categories */}
+          <Route path="/packages/:category" element={<PackageCategory />} />
+          <Route path="/accommodation/:type" element={<AccommodationCategory />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
