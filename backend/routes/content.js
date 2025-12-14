@@ -1,6 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const sanityClient = require('../config/sanity');
+const NodeCache = require('node-cache');
+
+// Initialize cache with 10 minutes TTL
+const cache = new NodeCache({ stdTTL: 600 });
+
+/**
+ * Helper to fetch data with caching
+ * @param {string} key - Unique cache key
+ * @param {Function} fetchFn - Async function to fetch data if cache miss
+ * @returns {Promise<any>} - Data from cache or fetchFn
+ */
+const fetchWithCache = async (key, fetchFn) => {
+    try {
+        const cachedData = cache.get(key);
+        if (cachedData) {
+            return cachedData;
+        }
+
+        const data = await fetchFn();
+        cache.set(key, data);
+        return data;
+    } catch (error) {
+        console.error(`Cache fetch error for key ${key}:`, error);
+        throw error;
+    }
+};
 
 /**
  * GET /api/content/tours
@@ -8,22 +34,24 @@ const sanityClient = require('../config/sanity');
  */
 router.get('/tours', async (req, res) => {
     try {
-        const query = `*[_type == "tour"] | order(_createdAt desc) {
-            _id,
-            title,
-            slug,
-            duration,
-            groupSize,
-            price,
-            featured,
-            rating,
-            reviews,
-            "images": images[]{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const tours = await sanityClient.fetch(query);
+        const tours = await fetchWithCache('all_tours', async () => {
+            const query = `*[_type == "tour"] | order(_createdAt desc) {
+                _id,
+                title,
+                slug,
+                duration,
+                groupSize,
+                price,
+                featured,
+                rating,
+                reviews,
+                "images": images[]{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -46,19 +74,21 @@ router.get('/tours', async (req, res) => {
 router.get('/tours/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const query = `*[_type == "tour" && _id == $id][0] {
-            ...,
-            "images": images[]{
-                "url": asset->url,
-                alt
-            },
-            "destination": destination->{
-                _id,
-                name,
-                slug
-            }
-        }`;
-        const tour = await sanityClient.fetch(query, { id });
+        const tour = await fetchWithCache(`tour_${id}`, async () => {
+            const query = `*[_type == "tour" && _id == $id][0] {
+                ...,
+                "images": images[]{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                "destination": destination->{
+                    _id,
+                    name,
+                    slug
+                }
+            }`;
+            return await sanityClient.fetch(query, { id });
+        });
 
         if (!tour) {
             return res.status(404).json({
@@ -85,21 +115,23 @@ router.get('/tours/:id', async (req, res) => {
  */
 router.get('/destinations', async (req, res) => {
     try {
-        const query = `*[_type == "destination"] | order(name asc) {
-            _id,
-            name,
-            slug,
-            tourCount,
-            "cardImage": cardImage{
-                "url": asset->url,
-                alt
-            },
-            "heroImage": heroImage{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const destinations = await sanityClient.fetch(query);
+        const destinations = await fetchWithCache('all_destinations', async () => {
+            const query = `*[_type == "destination"] | order(name asc) {
+                _id,
+                name,
+                slug,
+                tourCount,
+                "cardImage": cardImage{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                "heroImage": heroImage{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -122,11 +154,13 @@ router.get('/destinations', async (req, res) => {
 router.get('/destinations/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const query = `*[_type == "destination" && _id == $id][0]{
-      ...,
-      "tours": *[_type == "tour" && references(^._id)]
-    }`;
-        const destination = await sanityClient.fetch(query, { id });
+        const destination = await fetchWithCache(`destination_${id}`, async () => {
+            const query = `*[_type == "destination" && _id == $id][0]{
+                ...,
+                "tours": *[_type == "tour" && references(^._id)]
+            }`;
+            return await sanityClient.fetch(query, { id });
+        });
 
         if (!destination) {
             return res.status(404).json({
@@ -153,21 +187,23 @@ router.get('/destinations/:id', async (req, res) => {
  */
 router.get('/blog', async (req, res) => {
     try {
-        const query = `*[_type == "blogPost"] | order(publishedAt desc) {
-            _id,
-            title,
-            slug,
-            excerpt,
-            publishedAt,
-            author,
-            category,
-            readTime,
-            "featuredImage": featuredImage{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const posts = await sanityClient.fetch(query);
+        const posts = await fetchWithCache('all_blog_posts', async () => {
+            const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+                _id,
+                title,
+                slug,
+                excerpt,
+                publishedAt,
+                author,
+                category,
+                readTime,
+                "featuredImage": featuredImage{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -190,14 +226,16 @@ router.get('/blog', async (req, res) => {
 router.get('/blog/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const query = `*[_type == "blogPost" && _id == $id][0] {
-            ...,
-            "featuredImage": featuredImage{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const post = await sanityClient.fetch(query, { id });
+        const post = await fetchWithCache(`blog_post_${id}`, async () => {
+            const query = `*[_type == "blogPost" && _id == $id][0] {
+                ...,
+                "featuredImage": featuredImage{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query, { id });
+        });
 
         if (!post) {
             return res.status(404).json({
@@ -224,18 +262,20 @@ router.get('/blog/:id', async (req, res) => {
  */
 router.get('/services', async (req, res) => {
     try {
-        const query = `*[_type == "service"] | order(order asc) {
-            _id,
-            title,
-            slug,
-            description,
-            order,
-            "icon": icon{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const services = await sanityClient.fetch(query);
+        const services = await fetchWithCache('all_services', async () => {
+            const query = `*[_type == "service"] | order(order asc) {
+                _id,
+                title,
+                slug,
+                description,
+                order,
+                "icon": icon{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -257,20 +297,22 @@ router.get('/services', async (req, res) => {
  */
 router.get('/packages', async (req, res) => {
     try {
-        const query = `*[_type == "package"] | order(_createdAt desc) {
-            _id,
-            title,
-            slug,
-            description,
-            price,
-            duration,
-            "image": image{
-                "url": asset->url,
-                alt
-            },
-            category
-        }`;
-        const packages = await sanityClient.fetch(query);
+        const packages = await fetchWithCache('all_packages', async () => {
+            const query = `*[_type == "package"] | order(_createdAt desc) {
+                _id,
+                title,
+                slug,
+                description,
+                price,
+                duration,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                category
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -293,20 +335,22 @@ router.get('/packages', async (req, res) => {
 router.get('/packages/category/:category', async (req, res) => {
     try {
         const { category } = req.params;
-        const query = `*[_type == "package" && category == $category] | order(_createdAt desc) {
-            _id,
-            title,
-            slug,
-            description,
-            price,
-            duration,
-            "image": image{
-                "url": asset->url,
-                alt
-            },
-            category
-        }`;
-        const packages = await sanityClient.fetch(query, { category });
+        const packages = await fetchWithCache(`packages_category_${category}`, async () => {
+            const query = `*[_type == "package" && category == $category] | order(_createdAt desc) {
+                _id,
+                title,
+                slug,
+                description,
+                price,
+                duration,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                category
+            }`;
+            return await sanityClient.fetch(query, { category });
+        });
 
         res.status(200).json({
             success: true,
@@ -328,20 +372,22 @@ router.get('/packages/category/:category', async (req, res) => {
  */
 router.get('/accommodations', async (req, res) => {
     try {
-        const query = `*[_type == "accommodation"] | order(name asc) {
-            _id,
-            name,
-            type,
-            location,
-            priceRange,
-            rating,
-            "image": image{
-                "url": asset->url,
-                alt
-            },
-            description
-        }`;
-        const accommodations = await sanityClient.fetch(query);
+        const accommodations = await fetchWithCache('all_accommodations', async () => {
+            const query = `*[_type == "accommodation"] | order(name asc) {
+                _id,
+                name,
+                type,
+                location,
+                priceRange,
+                rating,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                description
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -364,20 +410,22 @@ router.get('/accommodations', async (req, res) => {
 router.get('/accommodations/type/:type', async (req, res) => {
     try {
         const { type } = req.params;
-        const query = `*[_type == "accommodation" && type == $type] | order(name asc) {
-            _id,
-            name,
-            type,
-            location,
-            priceRange,
-            rating,
-            "image": image{
-                "url": asset->url,
-                alt
-            },
-            description
-        }`;
-        const accommodations = await sanityClient.fetch(query, { type });
+        const accommodations = await fetchWithCache(`accommodations_type_${type}`, async () => {
+            const query = `*[_type == "accommodation" && type == $type] | order(name asc) {
+                _id,
+                name,
+                type,
+                location,
+                priceRange,
+                rating,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                },
+                description
+            }`;
+            return await sanityClient.fetch(query, { type });
+        });
 
         res.status(200).json({
             success: true,
@@ -399,19 +447,21 @@ router.get('/accommodations/type/:type', async (req, res) => {
  */
 router.get('/hot-deals', async (req, res) => {
     try {
-        const query = `*[_type == "hotDeal" && isActive == true] | order(_createdAt desc) {
-            _id,
-            title,
-            description,
-            price,
-            originalPrice,
-            tag,
-            "image": image{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const hotDeals = await sanityClient.fetch(query);
+        const hotDeals = await fetchWithCache('all_hot_deals', async () => {
+            const query = `*[_type == "hotDeal" && isActive == true] | order(_createdAt desc) {
+                _id,
+                title,
+                description,
+                price,
+                originalPrice,
+                tag,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -433,21 +483,22 @@ router.get('/hot-deals', async (req, res) => {
  */
 router.get('/popup-offer', async (req, res) => {
     try {
-        // Get the most recently created active popup offer
-        const query = `*[_type == "popupOffer" && isActive == true] | order(_createdAt desc)[0] {
-            _id,
-            title,
-            description,
-            ctaText,
-            ctaLink,
-            startDate,
-            endDate,
-            "image": image{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const popupOffer = await sanityClient.fetch(query);
+        const popupOffer = await fetchWithCache('active_popup_offer', async () => {
+            const query = `*[_type == "popupOffer" && isActive == true] | order(_createdAt desc)[0] {
+                _id,
+                title,
+                description,
+                ctaText,
+                ctaLink,
+                startDate,
+                endDate,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -468,14 +519,16 @@ router.get('/popup-offer', async (req, res) => {
  */
 router.get('/faq', async (req, res) => {
     try {
-        const query = `*[_type == "faq"] | order(order asc) {
-            _id,
-            question,
-            answer,
-            category,
-            order
-        }`;
-        const faqs = await sanityClient.fetch(query);
+        const faqs = await fetchWithCache('all_faqs', async () => {
+            const query = `*[_type == "faq"] | order(order asc) {
+                _id,
+                question,
+                answer,
+                category,
+                order
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
@@ -497,18 +550,20 @@ router.get('/faq', async (req, res) => {
  */
 router.get('/testimonial', async (req, res) => {
     try {
-        const query = `*[_type == "testimonial"] | order(_createdAt desc) {
-            _id,
-            name,
-            role,
-            content,
-            rating,
-            "image": image{
-                "url": asset->url,
-                alt
-            }
-        }`;
-        const testimonials = await sanityClient.fetch(query);
+        const testimonials = await fetchWithCache('all_testimonials', async () => {
+            const query = `*[_type == "testimonial"] | order(_createdAt desc) {
+                _id,
+                name,
+                role,
+                content,
+                rating,
+                "image": image{
+                    "url": asset->url + "?auto=format&q=80",
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query);
+        });
 
         res.status(200).json({
             success: true,
