@@ -1,4 +1,4 @@
-module.exports = {
+const blogPost = {
     name: 'blogPost',
     title: 'Blog Post',
     type: 'document',
@@ -92,3 +92,5 @@ module.exports = {
         },
     },
 };
+
+export default blogPost;

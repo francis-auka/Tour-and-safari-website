@@ -85,6 +85,9 @@ export const accommodationsAPI = {
     getByType: async (type: string) => {
         return fetchAPI(`/content/accommodations/type/${type}`);
     },
+    getById: async (id: string) => {
+        return fetchAPI(`/content/accommodations/${id}`);
+    },
 };
 
 // Hot Deals API

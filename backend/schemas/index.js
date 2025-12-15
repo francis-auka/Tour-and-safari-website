@@ -1,5 +1,6 @@
-const tour = require('./tour');
-const blogPost = require('./blogPost');
-const service = require('./service');
+import tour from './tour.js';
+import blogPost from './blogPost.js';
+import service from './service.js';
+import accommodation from './accommodation.js';
 
-module.exports = [tour, blogPost, service];
+export default [tour, blogPost, service, accommodation];

@@ -78,7 +78,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">Our Office</h4>
-                                        <p className="text-gray-600">123 Safari Way, Karen<br />Nairobi, Kenya</p>
+                                        <p className="text-gray-600">United Bible Society, Ground Floor, Ndemi Rd</p>
                                     </div>
                                 </div>
 
@@ -88,8 +88,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">Phone</h4>
-                                        <p className="text-gray-600">+254 700 123 456</p>
-                                        <p className="text-gray-600">+254 700 987 654</p>
+                                        <p className="text-gray-600">0745654619</p>
                                     </div>
                                 </div>
 
@@ -99,8 +98,7 @@ const Contact = () => {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-gray-900">Email</h4>
-                                        <p className="text-gray-600">info@lindbergsafaris.com</p>
-                                        <p className="text-gray-600">bookings@lindbergsafaris.com</p>
+                                        <p className="text-gray-600">lindberg@lindbergsafari.com</p>
                                     </div>
                                 </div>
 

@@ -60,14 +60,26 @@ const Home = () => {
         }
     ];
 
-    // Mock Partners Data
+    // Partners Data
     const partners = [
-        { name: 'Partner 1', logo: 'https://via.placeholder.com/150x80?text=Partner+1' },
-        { name: 'Partner 2', logo: 'https://via.placeholder.com/150x80?text=Partner+2' },
-        { name: 'Partner 3', logo: 'https://via.placeholder.com/150x80?text=Partner+3' },
-        { name: 'Partner 4', logo: 'https://via.placeholder.com/150x80?text=Partner+4' },
-        { name: 'Partner 5', logo: 'https://via.placeholder.com/150x80?text=Partner+5' },
-        { name: 'Partner 6', logo: 'https://via.placeholder.com/150x80?text=Partner+6' },
+        { name: 'Partner 1', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0024_fcc5e0.jpg' },
+        { name: 'Partner 2', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0023_jwsxce.jpg' },
+        { name: 'Partner 3', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0022_im5faz.jpg' },
+        { name: 'Partner 4', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0021_ijcenx.jpg' },
+        { name: 'Partner 5', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0025_mokzmf.jpg' },
+        { name: 'Partner 6', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0020_vakifx.jpg' },
+        { name: 'Partner 7', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812604/IMG-20251214-WA0019_ncbbga.jpg' },
+    ];
+
+    // Team Data
+    const teamMembers = [
+        { name: 'Charles Mwiti', role: 'CEO', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0030_nc0mt7.jpg' },
+        { name: 'Lucy Kathurima', role: 'Director', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0029_rmfaxp.jpg' },
+        { name: 'Jadiel Mwongera', role: 'Operations', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813226/IMG-20251214-WA0032_ezxukj.jpg' },
+        { name: 'Ann Karegi', role: 'Accounts', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813226/IMG-20251214-WA0031_bazmkr.jpg' },
+        { name: 'Ray Muriki', role: 'Finance Analyst', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0028_ija8zw.jpg' },
+        { name: 'David Njabi', role: 'Tour Consultant', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0027_zjsjki.jpg' },
+        { name: 'Jascinter Njoroge', role: 'Tour Consultant', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0026_ay6xve.jpg' },
     ];
 
     useEffect(() => {
@@ -258,13 +270,14 @@ const Home = () => {
                         <p className="text-gray-600 max-w-2xl mx-auto">We work with world-class partners to ensure your journey is seamless.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-                        {partners.map((_, index) => (
-                            <div key={index} className="flex justify-center">
-                                <div className="h-24 bg-gray-200 w-full rounded flex items-center justify-center text-gray-400 font-bold text-lg">
-                                    {/* Placeholder for actual logos */}
-                                    LOGO {index + 1}
-                                </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
+                        {partners.map((partner, index) => (
+                            <div key={index} className="flex justify-center items-center h-24 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                                <img
+                                    src={partner.logo}
+                                    alt={partner.name}
+                                    className="max-h-full max-w-full object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                                />
                             </div>
                         ))}
                     </div>
@@ -373,6 +386,33 @@ const Home = () => {
                             <h3 className="text-xl font-serif font-bold mb-2">Tailored Journeys</h3>
                             <p className="text-gray-600">Every trip is unique. We customize every detail to match your preferences and dreams.</p>
                         </div>
+                    </div>
+                </Container>
+            </Section>
+
+            {/* 7. Our Team */}
+            <Section className="bg-white">
+                <Container>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-3 text-gray-900">Meet Our Team</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">The passionate experts behind your unforgettable journeys.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="group text-center">
+                                <div className="relative mb-4 overflow-hidden rounded-lg aspect-[3/4]">
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-300" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+                                <p className="text-primary font-medium">{member.role}</p>
+                            </div>
+                        ))}
                     </div>
                 </Container>
             </Section>

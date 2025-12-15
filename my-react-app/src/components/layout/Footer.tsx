@@ -51,15 +51,19 @@ const Footer = () => {
                         <ul className="space-y-4">
                             <li className="flex items-start gap-3">
                                 <MapPin size={20} className="text-primary shrink-0" />
-                                <span>123 Safari Way, Nairobi, Kenya</span>
+                                <span>United Bible Society, Ground Floor, Ndemi Rd</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone size={20} className="text-primary shrink-0" />
-                                <span>+254 700 123 456</span>
+                                <div>
+                                    <p>0745654619</p>
+                                </div>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail size={20} className="text-primary shrink-0" />
-                                <span>info@lindbergsafaris.com</span>
+                                <div>
+                                    <p>lindberg@lindbergsafari.com</p>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -73,8 +77,8 @@ const Footer = () => {
                 <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm text-gray-500">
                     <p>&copy; {new Date().getFullYear()} Lindberg Safaris. All rights reserved.</p>
                 </div>
-            </Container>
-        </footer>
+            </Container >
+        </footer >
     );
 };
 

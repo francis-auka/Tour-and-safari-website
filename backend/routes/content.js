@@ -379,7 +379,7 @@ router.get('/accommodations', async (req, res) => {
                 name,
                 type,
                 location,
-                priceRange,
+                pricePerNight,
                 rating,
                 "image": image{
                     url,
@@ -405,6 +405,54 @@ router.get('/accommodations', async (req, res) => {
 });
 
 /**
+ * GET /api/content/accommodations/:id
+ * Fetch single accommodation by ID
+ */
+router.get('/accommodations/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const accommodation = await fetchWithCache(`accommodation_${id}`, async () => {
+            const query = `*[_type == "accommodation" && _id == $id][0] {
+                _id,
+                name,
+                type,
+                location,
+                pricePerNight,
+                rating,
+                "image": image{
+                    url,
+                    alt
+                },
+                description,
+                amenities,
+                "gallery": gallery[]{
+                    url,
+                    alt
+                }
+            }`;
+            return await sanityClient.fetch(query, { id });
+        });
+
+        if (!accommodation) {
+            return res.status(404).json({
+                error: 'Accommodation not found',
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: accommodation,
+        });
+    } catch (error) {
+        console.error('Fetch accommodation error:', error);
+        res.status(500).json({
+            error: 'Failed to fetch accommodation',
+            message: error.message,
+        });
+    }
+});
+
+/**
  * GET /api/content/accommodations/type/:type
  * Fetch accommodations by type
  */
@@ -417,7 +465,7 @@ router.get('/accommodations/type/:type', async (req, res) => {
                 name,
                 type,
                 location,
-                priceRange,
+                pricePerNight,
                 rating,
                 "image": image{
                     url,

@@ -86,6 +86,28 @@ const Company = () => {
         }
     ];
 
+    // Team Data
+    const teamMembers = [
+        { name: 'Charles Mwiti', role: 'CEO', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0030_nc0mt7.jpg' },
+        { name: 'Lucy Kathurima', role: 'Director', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0029_rmfaxp.jpg' },
+        { name: 'Jadiel Mwongera', role: 'Operations', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813226/IMG-20251214-WA0032_ezxukj.jpg' },
+        { name: 'Ann Karegi', role: 'Accounts', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813226/IMG-20251214-WA0031_bazmkr.jpg' },
+        { name: 'Ray Muriki', role: 'Finance Analyst', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0028_ija8zw.jpg' },
+        { name: 'David Njabi', role: 'Tour Consultant', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0027_zjsjki.jpg' },
+        { name: 'Jascinter Njoroge', role: 'Tour Consultant', image: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765813225/IMG-20251214-WA0026_ay6xve.jpg' },
+    ];
+
+    // Partners Data
+    const partners = [
+        { name: 'Partner 1', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0024_fcc5e0.jpg' },
+        { name: 'Partner 2', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0023_jwsxce.jpg' },
+        { name: 'Partner 3', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0022_im5faz.jpg' },
+        { name: 'Partner 4', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0021_ijcenx.jpg' },
+        { name: 'Partner 5', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0025_mokzmf.jpg' },
+        { name: 'Partner 6', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0020_vakifx.jpg' },
+        { name: 'Partner 7', logo: 'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812604/IMG-20251214-WA0019_ncbbga.jpg' },
+    ];
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -348,6 +370,55 @@ const Company = () => {
                     )}
                 </Container>
             </Section>
+            {/* Team Section */}
+            <Section className="bg-gray-50">
+                <Container>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-3 text-gray-900">Meet Our Team</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">The passionate experts behind your unforgettable journeys.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="group text-center">
+                                <div className="relative mb-4 overflow-hidden rounded-lg aspect-[3/4]">
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-300" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+                                <p className="text-primary font-medium">{member.role}</p>
+                            </div>
+                        ))}
+                    </div>
+                </Container>
+            </Section>
+
+            {/* Partners Section */}
+            <Section className="bg-white">
+                <Container>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-3 text-gray-900">Our Trusted Partners</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">Collaborating with the best to deliver excellence.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
+                        {partners.map((partner, index) => (
+                            <div key={index} className="flex justify-center items-center h-24 bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
+                                <img
+                                    src={partner.logo}
+                                    alt={partner.name}
+                                    className="max-h-full max-w-full object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </Container>
+            </Section>
+
             {/* Location Section */}
             <Section className="bg-white scroll-mt-20">
                 <Container>

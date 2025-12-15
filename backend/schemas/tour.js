@@ -1,4 +1,4 @@
-module.exports = {
+const tour = {
     name: 'tour',
     title: 'Tour',
     type: 'document',
@@ -168,3 +168,5 @@ module.exports = {
         },
     },
 };
+
+export default tour;

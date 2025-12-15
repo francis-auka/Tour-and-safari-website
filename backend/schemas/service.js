@@ -1,4 +1,4 @@
-module.exports = {
+const service = {
     name: 'service',
     title: 'Service',
     type: 'document',
@@ -70,3 +70,5 @@ module.exports = {
         },
     },
 };
+
+export default service;

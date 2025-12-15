@@ -29,6 +29,7 @@ const BlogPost = lazy(() => import('@/pages/BlogPost'));
 const Quiz = lazy(() => import('@/pages/Quiz'));
 const PackageCategory = lazy(() => import('@/pages/PackageCategory'));
 const AccommodationCategory = lazy(() => import('@/pages/AccommodationCategory'));
+const AccommodationDetail = lazy(() => import('@/pages/AccommodationDetail'));
 const Company = lazy(() => import('@/pages/Company'));
 
 // Component to handle redirects with hash navigation
@@ -98,6 +99,7 @@ function App() {
           {/* Dynamic Categories */}
           <Route path="/packages/:category" element={<PackageCategory />} />
           <Route path="/accommodation/:type" element={<AccommodationCategory />} />
+          <Route path="/accommodation/view/:id" element={<AccommodationDetail />} />
         </Routes>
       </Suspense>
     </Router>

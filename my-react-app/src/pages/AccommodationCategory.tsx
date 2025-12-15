@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import { Star, MapPin } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import api from '@/lib/api';
-import { getWhatsAppLink } from '@/lib/utils';
 
 const AccommodationCategory = () => {
     const { type } = useParams();
+    const navigate = useNavigate();
     const [accommodations, setAccommodations] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -108,9 +108,9 @@ const AccommodationCategory = () => {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                onClick={() => window.open(getWhatsAppLink(`I am interested in booking ${acc.name} (${acc.location})`), '_blank')}
+                                                onClick={() => navigate(`/accommodation/view/${acc._id}`)}
                                             >
-                                                Book Now
+                                                View Details
                                             </Button>
                                         </div>
                                     </div>
