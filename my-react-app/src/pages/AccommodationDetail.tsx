@@ -7,12 +7,13 @@ import Button from '@/components/ui/Button';
 import { Star, MapPin, Check, ArrowLeft } from 'lucide-react';
 import api from '@/lib/api';
 import { getWhatsAppLink } from '@/lib/utils';
+import { Image, AccommodationSection, Accommodation } from '@/types';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 
 const AccommodationDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [accommodation, setAccommodation] = useState<any>(null);
+    const [accommodation, setAccommodation] = useState<Accommodation | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -121,7 +122,7 @@ const AccommodationDetail = () => {
                                 <div>
                                     <h3 className="text-2xl font-serif font-bold mb-6 text-gray-900">Gallery</h3>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                        {accommodation.gallery.map((img: any, idx: number) => (
+                                        {accommodation.gallery.map((img: Image, idx: number) => (
                                             <div key={idx} className="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
                                                 <img src={img.url} alt={img.alt || `Gallery image ${idx + 1}`} className="w-full h-full object-cover" />
                                             </div>
@@ -159,7 +160,7 @@ const AccommodationDetail = () => {
                             {/* Sections (Sub-pages) */}
                             {accommodation.sections && accommodation.sections.length > 0 && (
                                 <div className="space-y-12">
-                                    {accommodation.sections.map((section: any, idx: number) => (
+                                    {accommodation.sections.map((section: AccommodationSection, idx: number) => (
                                         <div key={idx} className="border-t border-gray-100 pt-8">
                                             <h3 className="text-2xl font-serif font-bold mb-4 text-gray-900">{section.title}</h3>
                                             {section.content && (
@@ -169,7 +170,7 @@ const AccommodationDetail = () => {
                                             )}
                                             {section.images && section.images.length > 0 && (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    {section.images.map((img: any, imgIdx: number) => (
+                                                    {section.images.map((img: Image, imgIdx: number) => (
                                                         <div key={imgIdx} className="rounded-lg overflow-hidden h-64">
                                                             <img src={img.url} alt={img.alt || section.title} className="w-full h-full object-cover" />
                                                         </div>

@@ -603,12 +603,11 @@ router.get('/testimonial', async (req, res) => {
             const query = `*[_type == "testimonial"] | order(_createdAt desc) {
                 _id,
                 name,
-                role,
-                content,
+                location,
+                text,
                 rating,
-                "image": image{
-                    url,
-                    alt
+                "image": {
+                    "url": coalesce(image.url, image)
                 }
             }`;
             return await sanityClient.fetch(query);

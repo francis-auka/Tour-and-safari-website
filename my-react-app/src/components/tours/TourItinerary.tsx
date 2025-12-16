@@ -6,8 +6,8 @@ interface DayProps {
     day: number;
     title: string;
     description: string;
-    accommodation: string;
-    meals: string;
+    accommodation?: string;
+    meals?: string;
 }
 
 const ItineraryDay: React.FC<DayProps> = ({ day, title, description, accommodation, meals }) => {

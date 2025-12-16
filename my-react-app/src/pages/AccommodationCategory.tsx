@@ -6,11 +6,12 @@ import Section from '@/components/ui/Section';
 import { Star, MapPin } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import api from '@/lib/api';
+import { Accommodation } from '@/types';
 
 const AccommodationCategory = () => {
     const { type } = useParams();
     const navigate = useNavigate();
-    const [accommodations, setAccommodations] = useState<any[]>([]);
+    const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
     const [loading, setLoading] = useState(true);
 
     const typeInfo: Record<string, { title: string; description: string }> = {

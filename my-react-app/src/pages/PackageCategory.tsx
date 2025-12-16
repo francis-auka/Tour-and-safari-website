@@ -5,10 +5,11 @@ import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import TourCard from '@/components/tours/TourCard';
 import api from '@/lib/api';
+import { Package } from '@/types';
 
 const PackageCategory = () => {
     const { category } = useParams();
-    const [packages, setPackages] = useState<any[]>([]);
+    const [packages, setPackages] = useState<Package[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Mapping slug to readable title and description (fallback/static info)
@@ -85,10 +86,10 @@ const PackageCategory = () => {
                                     id={pkg._id}
                                     title={pkg.title}
                                     image={pkg.image?.url || "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
-                                    duration={pkg.duration}
-                                    groupSize="Contact us" // Package schema might not have groupSize, fallback
-                                    price={pkg.price}
-                                    rating={0} // Packages might not have ratings yet
+                                    duration={pkg.duration || ''}
+                                    groupSize="Contact us"
+                                    price={pkg.price || 0}
+                                    rating={0}
                                     reviews={0}
                                 />
                             ))}

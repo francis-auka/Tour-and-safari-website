@@ -50,7 +50,7 @@ const LocationMap = ({ className }: LocationMapProps) => {
                     <Popup>
                         <div className="text-center">
                             <h3 className="font-bold text-gray-900">Lindberg Safaris</h3>
-                            <p className="text-sm text-gray-600">123 Safari Way, Nairobi</p>
+                            <p className="text-sm text-gray-600">Ndemi Road, United Bible Society</p>
                         </div>
                     </Popup>
                 </Marker>

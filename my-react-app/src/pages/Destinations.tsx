@@ -4,9 +4,10 @@ import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import DestinationCard from '@/components/destinations/DestinationCard';
 import api from '@/lib/api';
+import { Destination } from '@/types';
 
 const Destinations = () => {
-    const [destinations, setDestinations] = useState<any[]>([]);
+    const [destinations, setDestinations] = useState<Destination[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -16,9 +17,9 @@ const Destinations = () => {
                 setLoading(true);
                 const response = await api.destinations.getAll();
                 setDestinations(response.data || []);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching destinations:', err);
-                setError(err.message || 'Failed to load destinations');
+                setError((err as Error).message || 'Failed to load destinations');
             } finally {
                 setLoading(false);
             }

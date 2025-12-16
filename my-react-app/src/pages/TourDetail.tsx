@@ -8,11 +8,12 @@ import Button from '@/components/ui/Button';
 import TourItinerary from '@/components/tours/TourItinerary';
 import api from '@/lib/api';
 import { getWhatsAppLink } from '@/lib/utils';
+import { Tour } from '@/types';
 
 const TourDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [tour, setTour] = useState<any>(null);
+    const [tour, setTour] = useState<Tour | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

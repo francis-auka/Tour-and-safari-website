@@ -26,11 +26,8 @@ export default {
         },
         {
             name: 'image',
-            title: 'Client Image',
-            type: 'image',
-            options: {
-                hotspot: true,
-            },
+            title: 'Client Image URL (Cloudinary)',
+            type: 'url',
         },
     ],
 }

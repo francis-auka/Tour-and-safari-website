@@ -3,10 +3,11 @@ import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import { Link } from 'react-router-dom';
-import { Car, Hotel, Plane, Compass, ArrowRight, Map, Shield, Users, Heart } from 'lucide-react';
+import { Car, Hotel, Plane, Compass, ArrowRight, Map, Shield, Users, Heart, LucideIcon } from 'lucide-react';
+import { Service } from '@/types';
 
 // Icon mapping
-const iconMap: Record<string, any> = {
+const iconMap: Record<string, LucideIcon> = {
     'Car': Car,
     'Hotel': Hotel,
     'Plane': Plane,
@@ -18,13 +19,14 @@ const iconMap: Record<string, any> = {
 };
 
 const Services = () => {
-    const [services, setServices] = useState<any[]>([]);
+    const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState(true);
 
     const servicesList = [
         {
             _id: '1',
             title: 'Airticketing',
+            slug: { current: 'airticketing' },
             description: 'Best flight deals and seamless booking experiences for international and local travel.',
             icon: 'Plane',
             features: ['International Flights', 'Local Flights', 'Best Price Guarantee', '24/7 Support']
@@ -32,6 +34,7 @@ const Services = () => {
         {
             _id: '2',
             title: 'Hotel Booking',
+            slug: { current: 'hotel-booking' },
             description: 'Luxury accommodations in the heart of nature, from bush camps to 5-star resorts.',
             icon: 'Hotel',
             features: ['Luxury Resorts', 'Bush Camps', 'City Hotels', 'Best Rates']
@@ -39,6 +42,7 @@ const Services = () => {
         {
             _id: '3',
             title: 'Transport Services',
+            slug: { current: 'transport-services' },
             description: 'Comfortable and reliable transport solutions for your entire journey.',
             icon: 'Car',
             features: ['Airport Transfers', 'Safari Jeeps', 'Car Hire', 'Professional Drivers']
@@ -46,6 +50,7 @@ const Services = () => {
         {
             _id: '4',
             title: 'Visa Applications',
+            slug: { current: 'visa-applications' },
             description: 'Hassle-free visa assistance to ensure smooth entry into your destination.',
             icon: 'Shield',
             features: ['Visa Advice', 'Application Assistance', 'Document Review', 'Fast Processing']
@@ -53,6 +58,7 @@ const Services = () => {
         {
             _id: '5',
             title: 'Custom Itineraries',
+            slug: { current: 'custom-itineraries' },
             description: 'Tailor-made packages designed specifically for your unique preferences and budget.',
             icon: 'Map',
             features: ['Personalized Planning', 'Flexible Schedules', 'Expert Advice', 'Unique Experiences']
@@ -86,7 +92,7 @@ const Services = () => {
                     ) : services.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {services.map((service) => {
-                                const IconComponent = iconMap[service.icon] || Compass;
+                                const IconComponent = iconMap[service.icon || ''] || Compass;
                                 return (
                                     <div key={service._id} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                                         <div className="mb-6 bg-primary-light/10 w-20 h-20 rounded-full flex items-center justify-center">

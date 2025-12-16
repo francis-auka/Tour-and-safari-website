@@ -7,11 +7,12 @@ import { cn } from '@/lib/utils';
 import api from '@/lib/api';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import LocationMap from '@/components/ui/LocationMap';
+import { FAQ, Testimonial } from '@/types';
 
 const Company = () => {
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-    const [faqs, setFaqs] = useState<any[]>([]);
-    const [testimonials, setTestimonials] = useState<any[]>([]);
+    const [faqs, setFaqs] = useState<FAQ[]>([]);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Navigation items for quick jump
@@ -339,7 +340,7 @@ const Company = () => {
                             {testimonials.map((item, index) => (
                                 <div key={item._id || index} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-all">
                                     <Quote className="text-primary/20 mb-4 h-10 w-10" />
-                                    <p className="text-gray-600 mb-6 italic flex-grow">"{item.text || item.content}"</p>
+                                    <p className="text-gray-600 mb-6 italic flex-grow">"{item.text}"</p>
 
                                     <div className="flex items-center gap-1 text-accent mb-4">
                                         {[...Array(item.rating || 5)].map((_, i) => (
@@ -407,11 +408,11 @@ const Company = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
                         {partners.map((partner, index) => (
-                            <div key={index} className="flex justify-center items-center h-24 bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
+                            <div key={index} className="flex justify-center items-center h-32 bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
                                 <img
                                     src={partner.logo}
                                     alt={partner.name}
-                                    className="max-h-full max-w-full object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                                    className="max-h-full max-w-full object-contain transition-all duration-300"
                                 />
                             </div>
                         ))}

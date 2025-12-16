@@ -5,6 +5,7 @@ import Section from '@/components/ui/Section';
 import DestinationCard from '@/components/destinations/DestinationCard';
 
 import { regionData } from '@/data/destinations';
+import { SubDestination } from '@/types';
 
 const RegionDestinations = () => {
     const { region } = useParams<{ region: string }>();
@@ -41,7 +42,7 @@ const RegionDestinations = () => {
             <Section>
                 <Container>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {data.subDestinations.map((dest: any) => (
+                        {data.subDestinations.map((dest: SubDestination) => (
                             <DestinationCard
                                 key={dest.id}
                                 id={dest.id} // Note: This ID should ideally map to a real destination ID in Sanity if we want the detail page to work dynamically.

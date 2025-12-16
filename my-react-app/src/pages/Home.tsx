@@ -107,7 +107,7 @@ const Home = () => {
 
                 // Get featured tours or first 3
                 const allTours = toursRes.data || [];
-                const featuredTours = allTours.filter((t: any) => t.featured).slice(0, 3);
+                const featuredTours = allTours.filter((t: Tour) => t.featured).slice(0, 3);
                 setTours(featuredTours.length > 0 ? featuredTours : allTours.slice(0, 3));
 
                 // Get Hot Deals
@@ -272,7 +272,7 @@ const Home = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
                         {partners.map((partner, index) => (
-                            <div key={index} className="flex justify-center items-center h-24 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                            <div key={index} className="flex justify-center items-center h-32 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
                                 <img
                                     src={partner.logo}
                                     alt={partner.name}
@@ -385,6 +385,54 @@ const Home = () => {
                             </div>
                             <h3 className="text-xl font-serif font-bold mb-2">Tailored Journeys</h3>
                             <p className="text-gray-600">Every trip is unique. We customize every detail to match your preferences and dreams.</p>
+                        </div>
+                    </div>
+                </Container>
+            </Section>
+
+            {/* New Travel With Us Section (Video & Affiliates) */}
+            <Section className="bg-white">
+                <Container>
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-3 text-gray-900">Travel With Us</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">See what makes our journeys special and meet our trusted partners.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                        {/* Left Column: Video */}
+                        <div className="w-full">
+                            <div className="relative pt-[56.25%] rounded-xl overflow-hidden shadow-lg">
+                                <iframe
+                                    className="absolute top-0 left-0 w-full h-full"
+                                    src="https://www.youtube.com/embed/9Gi7_2C5U1o?si=sBEpRxH_hWkbwamE&start=20"
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Affiliate Members */}
+                        <div>
+                            <h3 className="text-2xl font-serif font-bold mb-8 text-gray-900 text-center md:text-left">Affiliate Members</h3>
+                            <div className="grid grid-cols-2 gap-6">
+                                {[
+                                    'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0020_vakifx.jpg',
+                                    'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812606/IMG-20251214-WA0022_im5faz.jpg',
+                                    'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812605/IMG-20251214-WA0021_ijcenx.jpg',
+                                    'https://res.cloudinary.com/di5ga8z9i/image/upload/v1765812604/IMG-20251214-WA0019_ncbbga.jpg'
+                                ].map((logoUrl, index) => (
+                                    <div key={index} className="flex justify-center items-center h-32 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
+                                        <img
+                                            src={logoUrl}
+                                            alt={`Affiliate Member ${index + 1}`}
+                                            className="max-h-full max-w-full object-contain"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </Container>

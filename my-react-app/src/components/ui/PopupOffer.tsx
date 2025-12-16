@@ -3,10 +3,11 @@ import { X } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import api from '@/lib/api';
 import { getWhatsAppLink } from '@/lib/utils';
+import { PopupOffer as PopupOfferType } from '@/types';
 
 const PopupOffer = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [offer, setOffer] = useState<any>(null);
+    const [offer, setOffer] = useState<PopupOfferType | null>(null);
 
     useEffect(() => {
         const fetchOffer = async () => {

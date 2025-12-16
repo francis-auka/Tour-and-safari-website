@@ -5,10 +5,11 @@ import Section from '@/components/ui/Section';
 import TourCard from '@/components/tours/TourCard';
 import TourFilter from '@/components/tours/TourFilter';
 import api from '@/lib/api';
+import { Tour } from '@/types';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 
 const Tours = () => {
-    const [tours, setTours] = useState<any[]>([]);
+    const [tours, setTours] = useState<Tour[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -18,9 +19,9 @@ const Tours = () => {
                 setLoading(true);
                 const response = await api.tours.getAll();
                 setTours(response.data || []);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching tours:', err);
-                setError(err.message || 'Failed to load tours');
+                setError((err as Error).message || 'Failed to load tours');
             } finally {
                 setLoading(false);
             }

@@ -5,10 +5,11 @@ import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import api from '@/lib/api';
+import { BlogPost as BlogPostType } from '@/types';
 
 const BlogPost = () => {
     const { id } = useParams();
-    const [post, setPost] = useState<any>(null);
+    const [post, setPost] = useState<BlogPostType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +21,9 @@ const BlogPost = () => {
                 setLoading(true);
                 const response = await api.blog.getById(id);
                 setPost(response.data);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching blog post:', err);
-                setError(err.message || 'Failed to load blog post');
+                setError((err as Error).message || 'Failed to load blog post');
             } finally {
                 setLoading(false);
             }

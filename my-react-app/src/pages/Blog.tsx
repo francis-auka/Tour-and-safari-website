@@ -7,9 +7,10 @@ import { Link } from 'react-router-dom';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 import api from '@/lib/api';
 import LoadingScreen from '@/components/ui/LoadingScreen';
+import { BlogPost } from '@/types';
 
 const Blog = () => {
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<BlogPost[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,9 +21,9 @@ const Blog = () => {
                 const response = await api.blog.getAll();
                 console.log('Blog Posts:', response.data);
                 setPosts(response.data || []);
-            } catch (err: any) {
+            } catch (err) {
                 console.error('Error fetching blog posts:', err);
-                setError(err.message || 'Failed to load blog posts');
+                setError((err as Error).message || 'Failed to load blog posts');
             } finally {
                 setLoading(false);
             }

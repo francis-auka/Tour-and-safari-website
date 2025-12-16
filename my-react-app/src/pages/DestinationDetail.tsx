@@ -5,12 +5,12 @@ import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
-import { destinationsData } from '@/data/destinations';
+import { destinationsData, DestinationData, PlaceToVisit } from '@/data/destinations';
 import { getWhatsAppLink } from '@/lib/utils';
 
 const DestinationDetail = () => {
     const { id } = useParams<{ id: string }>();
-    const [destination, setDestination] = useState<any>(null);
+    const [destination, setDestination] = useState<DestinationData | null>(null);
     const [loading, setLoading] = useState(true);
 
     // Form State
@@ -111,7 +111,7 @@ const DestinationDetail = () => {
                                 <div className="mb-12">
                                     <h3 className="text-2xl font-serif font-bold mb-8">Top Places to Visit in {destination.name}</h3>
                                     <div className="space-y-12">
-                                        {destination.placesToVisit.map((place: any, index: number) => (
+                                        {destination.placesToVisit.map((place: PlaceToVisit, index: number) => (
                                             <div key={index} className="flex flex-col md:flex-row gap-8 items-start">
                                                 <div className="md:w-1/2 overflow-hidden rounded-xl shadow-md">
                                                     <img
