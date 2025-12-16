@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import LocationMap from '@/components/ui/LocationMap';
 
@@ -16,9 +16,13 @@ const Footer = () => {
                             Discover the magic of Africa with our personalized journeys.
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="hover:text-primary transition-colors"><Facebook size={20} /></a>
-                            <a href="#" className="hover:text-primary transition-colors"><Instagram size={20} /></a>
-                            <a href="#" className="hover:text-primary transition-colors"><Twitter size={20} /></a>
+                            <a href="https://www.facebook.com/LindbergHolidaysAndSafaris" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors"><Facebook size={20} /></a>
+                            <a href="https://www.instagram.com/Lindbergholidays" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors"><Instagram size={20} /></a>
+                            <a href="https://www.tiktok.com/@Lindberg.holidays" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+                                </svg>
+                            </a>
                         </div>
                     </div>
 

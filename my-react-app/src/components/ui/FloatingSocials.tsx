@@ -6,7 +6,7 @@ const FloatingSocials = () => {
         {
             name: 'Facebook',
             icon: <Facebook size={24} />,
-            url: 'https://facebook.com', // Replace with actual link
+            url: 'https://www.facebook.com/LindbergHolidaysAndSafaris',
             color: 'bg-[#1877F2]',
             hoverColor: 'hover:bg-[#1877F2]/90'
         },
@@ -24,7 +24,7 @@ const FloatingSocials = () => {
         {
             name: 'Instagram',
             icon: <Instagram size={24} />,
-            url: 'https://instagram.com', // Replace with actual link
+            url: 'https://www.instagram.com/Lindbergholidays',
             color: 'bg-[#E4405F]',
             hoverColor: 'hover:bg-[#E4405F]/90'
         },
@@ -35,9 +35,16 @@ const FloatingSocials = () => {
                     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
                 </svg>
             ),
-            url: 'https://tiktok.com', // Replace with actual link
+            url: 'https://www.tiktok.com/@Lindberg.holidays',
             color: 'bg-[#000000]',
             hoverColor: 'hover:bg-[#000000]/90'
+        },
+        {
+            name: 'TripAdvisor',
+            icon: <img src="/tripadvisor.jpg" alt="TripAdvisor" className="w-6 h-6 rounded-full" />,
+            url: 'https://www.tripadvisor.com/Attraction_Review-g294207-d17384036-Reviews-Lindberg_Holidays_and_Safaris-Nairobi.html',
+            color: 'bg-[#00AA6C]',
+            hoverColor: 'hover:bg-[#00AA6C]/90'
         }
     ];
 
