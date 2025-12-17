@@ -159,3 +159,16 @@ export interface Accommodation {
     gallery?: Image[];
     sections?: AccommodationSection[];
 }
+
+export interface BlogPost {
+    _id: string;
+    title: string;
+    slug: { current: string };
+    category?: string;
+    publishedAt: string;
+    featuredImage?: Image;
+    excerpt?: string;
+    author?: string;
+    content: string;
+    readTime?: string;
+}
