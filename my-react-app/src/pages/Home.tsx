@@ -270,9 +270,9 @@ const Home = () => {
                         <p className="text-gray-600 max-w-2xl mx-auto">We work with world-class partners to ensure your journey is seamless.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar md:grid md:grid-cols-4 lg:grid-cols-7 md:gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500 pb-4 md:pb-0">
                         {partners.map((partner, index) => (
-                            <div key={index} className="flex justify-center items-center h-32 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+                            <div key={index} className="snap-center shrink-0 w-[40%] md:w-auto flex justify-center items-center h-32 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
                                 <img
                                     src={partner.logo}
                                     alt={partner.name}
@@ -446,7 +446,25 @@ const Home = () => {
                         <p className="text-gray-600 max-w-2xl mx-auto">The passionate experts behind your unforgettable journeys.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {/* Mobile Horizontal Scroll View */}
+                    <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 no-scrollbar">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="snap-center shrink-0 w-[80%] sm:w-[45%] group text-center">
+                                <div className="relative mb-4 overflow-hidden rounded-lg aspect-[3/4]">
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+                                <p className="text-primary font-medium">{member.role}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop Grid View */}
+                    <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {teamMembers.map((member, index) => (
                             <div key={index} className="group text-center">
                                 <div className="relative mb-4 overflow-hidden rounded-lg aspect-[3/4]">

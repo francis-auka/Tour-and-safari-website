@@ -379,9 +379,9 @@ const Company = () => {
                         <p className="text-gray-600 max-w-2xl mx-auto">The passionate experts behind your unforgettable journeys.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 no-scrollbar md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:pb-0">
                         {teamMembers.map((member, index) => (
-                            <div key={index} className="group text-center">
+                            <div key={index} className="snap-center shrink-0 w-[80%] sm:w-[45%] md:w-auto group text-center">
                                 <div className="relative mb-4 overflow-hidden rounded-lg aspect-[3/4]">
                                     <img
                                         src={member.image}
@@ -406,9 +406,9 @@ const Company = () => {
                         <p className="text-gray-600 max-w-2xl mx-auto">Collaborating with the best to deliver excellence.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500">
+                    <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 no-scrollbar md:grid md:grid-cols-4 lg:grid-cols-7 md:gap-8 items-center opacity-80 hover:opacity-100 transition-all duration-500 pb-4 md:pb-0">
                         {partners.map((partner, index) => (
-                            <div key={index} className="flex justify-center items-center h-32 bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
+                            <div key={index} className="snap-center shrink-0 w-[40%] md:w-auto flex justify-center items-center h-32 bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all border border-gray-100">
                                 <img
                                     src={partner.logo}
                                     alt={partner.name}
