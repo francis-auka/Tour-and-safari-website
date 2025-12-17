@@ -151,7 +151,7 @@ const Home = () => {
                             className="absolute inset-0 bg-cover bg-center"
                             style={{ backgroundImage: `url("${slide.image}")` }}
                         >
-                            <div className="absolute inset-0 bg-black/40" />
+                            <div className="absolute inset-0 bg-black/50" />
                         </div>
                         <Container className="relative h-full flex items-center justify-center text-center z-20">
                             <div className="max-w-4xl mx-auto px-4">
@@ -295,7 +295,7 @@ const Home = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {Object.values(regionData).map((region) => (
                             <Link to={`/regions/${region.id}`} key={region.id} className="group relative overflow-hidden rounded-xl h-80 block">
-                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-all duration-500 z-10" />
+                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-500 z-10" />
                                 <img
                                     src={region.image}
                                     alt={region.title}

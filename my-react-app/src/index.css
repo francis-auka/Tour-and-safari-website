@@ -27,7 +27,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.92);
     z-index: -1;
     pointer-events: none;
   }
@@ -58,7 +58,9 @@
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }
