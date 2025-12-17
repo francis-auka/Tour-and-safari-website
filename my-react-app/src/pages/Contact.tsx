@@ -3,6 +3,7 @@ import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import LocationMap from '@/components/ui/LocationMap';
 
 const Contact = () => {
     return (
@@ -115,9 +116,7 @@ const Contact = () => {
                             </div>
 
                             {/* Map Placeholder */}
-                            <div className="mt-8 bg-gray-200 h-48 rounded-lg flex items-center justify-center text-gray-500">
-                                Map Integration Coming Soon
-                            </div>
+                            <LocationMap className="mt-8 h-64 rounded-lg shadow-md" />
                         </div>
                     </div>
                 </Container>
