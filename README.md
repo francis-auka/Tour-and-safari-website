@@ -67,8 +67,8 @@ Instead of routing requests through a middleware server, the application queries
 Create a `.env` file in `my-react-app` with the following:
 ```env
 VITE_SANITY_PROJECT_ID=your_project_id
-VITE_SANITY_DATASET=production
-VITE_SANITY_API_VERSION=2024-01-01
+VITE_SANITY_DATASET=your_dataset_name
+VITE_SANITY_API_VERSION=YYYY-MM-DD
 ```
 
 ### Running Locally
