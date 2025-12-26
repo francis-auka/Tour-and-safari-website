@@ -1,159 +1,309 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import { client } from './sanity';
 
 /**
- * API Client for Lindberg Safaris Backend
+ * API Client for Lindberg Safaris (Direct Sanity)
  */
-
-// Generic fetch wrapper with error handling
-async function fetchAPI(endpoint: string, options: RequestInit = {}) {
-    try {
-        const response = await fetch(`${API_URL}${endpoint}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                ...options.headers,
-            },
-            ...options,
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'API request failed');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('API Error:', error);
-        throw error;
-    }
-}
 
 // Tours API
 export const toursAPI = {
     getAll: async () => {
-        return fetchAPI('/content/tours');
+        const query = `*[_type == "tour"] | order(_createdAt desc) {
+            _id,
+            title,
+            slug,
+            duration,
+            groupSize,
+            price,
+            featured,
+            rating,
+            reviews,
+            "images": images[]{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data }; // Keeping { data } structure to minimize component changes
     },
 
     getById: async (id: string) => {
-        return fetchAPI(`/content/tours/${id}`);
+        const query = `*[_type == "tour" && _id == $id][0] {
+            ...,
+            "images": images[]{
+                url,
+                alt
+            },
+            "destination": destination->{
+                _id,
+                name,
+                slug
+            }
+        }`;
+        const data = await client.fetch(query, { id });
+        return { data };
     },
 };
 
 // Destinations API
 export const destinationsAPI = {
     getAll: async () => {
-        return fetchAPI('/content/destinations');
+        const query = `*[_type == "destination"] | order(name asc) {
+            _id,
+            name,
+            slug,
+            tourCount,
+            "cardImage": cardImage{
+                url,
+                alt
+            },
+            "heroImage": heroImage{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 
     getById: async (id: string) => {
-        return fetchAPI(`/content/destinations/${id}`);
+        const query = `*[_type == "destination" && _id == $id][0]{
+            ...,
+            "tours": *[_type == "tour" && references(^._id)]
+        }`;
+        const data = await client.fetch(query, { id });
+        return { data };
     },
 };
 
 // Blog API
 export const blogAPI = {
     getAll: async () => {
-        return fetchAPI('/content/blog');
+        const query = `*[_type == "blogPost"] | order(publishedAt desc) {
+            _id,
+            title,
+            slug,
+            excerpt,
+            publishedAt,
+            author,
+            category,
+            readTime,
+            "featuredImage": featuredImage{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 
     getById: async (id: string) => {
-        return fetchAPI(`/content/blog/${id}`);
+        const query = `*[_type == "blogPost" && _id == $id][0] {
+            ...,
+            "featuredImage": featuredImage{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query, { id });
+        return { data };
     },
 };
 
 // Services API
 export const servicesAPI = {
     getAll: async () => {
-        return fetchAPI('/content/services');
+        const query = `*[_type == "service"] | order(order asc) {
+            _id,
+            title,
+            slug,
+            description,
+            order,
+            icon,
+            "image": image{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 };
 
 // Packages API
 export const packagesAPI = {
     getAll: async () => {
-        return fetchAPI('/content/packages');
+        const query = `*[_type == "package"] | order(_createdAt desc) {
+            _id,
+            title,
+            slug,
+            description,
+            price,
+            duration,
+            "image": image{
+                url,
+                alt
+            },
+            category
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
     getByCategory: async (category: string) => {
-        return fetchAPI(`/content/packages/category/${category}`);
+        const query = `*[_type == "package" && category == $category] | order(_createdAt desc) {
+            _id,
+            title,
+            slug,
+            description,
+            price,
+            duration,
+            "image": image{
+                url,
+                alt
+            },
+            category
+        }`;
+        const data = await client.fetch(query, { category });
+        return { data };
     },
 };
 
 // Accommodations API
 export const accommodationsAPI = {
     getAll: async () => {
-        return fetchAPI('/content/accommodations');
+        const query = `*[_type == "accommodation"] | order(name asc) {
+            _id,
+            name,
+            type,
+            location,
+            pricePerNight,
+            rating,
+            "image": image{
+                url,
+                alt
+            },
+            description
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
     getByType: async (type: string) => {
-        return fetchAPI(`/content/accommodations/type/${type}`);
+        const query = `*[_type == "accommodation" && type == $type] | order(name asc) {
+            _id,
+            name,
+            type,
+            location,
+            pricePerNight,
+            rating,
+            "image": image{
+                url,
+                alt
+            },
+            description
+        }`;
+        const data = await client.fetch(query, { type });
+        return { data };
     },
     getById: async (id: string) => {
-        return fetchAPI(`/content/accommodations/${id}`);
+        const query = `*[_type == "accommodation" && _id == $id][0] {
+            _id,
+            name,
+            type,
+            location,
+            pricePerNight,
+            rating,
+            "image": image{
+                url,
+                alt
+            },
+            description,
+            amenities,
+            "gallery": gallery[]{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query, { id });
+        return { data };
     },
 };
 
 // Hot Deals API
 export const hotDealsAPI = {
     getAll: async () => {
-        return fetchAPI('/content/hot-deals');
+        const query = `*[_type == "hotDeal" && isActive == true] | order(_createdAt desc) {
+            _id,
+            title,
+            description,
+            price,
+            originalPrice,
+            tag,
+            "image": image{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 };
 
 // Pop-up Offer API
 export const popupAPI = {
     getActive: async () => {
-        return fetchAPI('/content/popup-offer');
+        const query = `*[_type == "popupOffer" && isActive == true] | order(_createdAt desc)[0] {
+            _id,
+            title,
+            description,
+            ctaText,
+            ctaLink,
+            startDate,
+            endDate,
+            "image": image{
+                url,
+                alt
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 };
 
 // FAQ API
 export const faqAPI = {
     getAll: async () => {
-        return fetchAPI('/content/faq');
+        const query = `*[_type == "faq"] | order(order asc) {
+            _id,
+            question,
+            answer,
+            category,
+            order
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 };
 
 // Testimonial API
 export const testimonialAPI = {
     getAll: async () => {
-        return fetchAPI('/content/testimonial');
+        const query = `*[_type == "testimonial"] | order(_createdAt desc) {
+            _id,
+            name,
+            location,
+            text,
+            rating,
+            "image": {
+                "url": coalesce(image.url, image)
+            }
+        }`;
+        const data = await client.fetch(query);
+        return { data };
     },
 };
 
-// Upload API
-export const uploadAPI = {
-    uploadImage: async (file: File, documentType?: string) => {
-        const formData = new FormData();
-        formData.append('image', file);
-        if (documentType) {
-            formData.append('documentType', documentType);
-        }
-
-        const response = await fetch(`${API_URL}/upload`, {
-            method: 'POST',
-            body: formData,
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Upload failed');
-        }
-
-        return await response.json();
-    },
-
-    getImages: async () => {
-        return fetchAPI('/upload/images');
-    },
-
-    deleteImage: async (publicId: string) => {
-        return fetchAPI(`/upload/${publicId}`, {
-            method: 'DELETE',
-        });
-    },
-};
-
-// Health check
+// Health check (Stub for compatibility)
 export const healthCheck = async () => {
-    return fetchAPI('/health');
+    return { success: true, message: 'Frontend-only mode' };
 };
 
 export default {
@@ -167,6 +317,6 @@ export default {
     popup: popupAPI,
     faq: faqAPI,
     testimonial: testimonialAPI,
-    upload: uploadAPI,
     healthCheck,
 };
+

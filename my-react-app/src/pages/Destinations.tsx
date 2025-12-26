@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
@@ -7,26 +7,12 @@ import api from '@/lib/api';
 import { Destination } from '@/types';
 
 const Destinations = () => {
-    const [destinations, setDestinations] = useState<Destination[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchDestinations = async () => {
-            try {
-                setLoading(true);
-                const response = await api.destinations.getAll();
-                setDestinations(response.data || []);
-            } catch (err) {
-                console.error('Error fetching destinations:', err);
-                setError((err as Error).message || 'Failed to load destinations');
-            } finally {
-                setLoading(false);
-            }
-        };
 
-        fetchDestinations();
-    }, []);
+    const { data: destinationsData, error: destinationsError } = useSWR<{ data: Destination[] }>('destinations', () => api.destinations.getAll());
+    const destinations = destinationsData?.data || [];
+    const loading = !destinationsData && !destinationsError;
+    const error = destinationsError ? (destinationsError as Error).message || 'Failed to load destinations' : null;
 
     return (
         <Layout>

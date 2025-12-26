@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
@@ -11,8 +11,9 @@ import { Accommodation } from '@/types';
 const AccommodationCategory = () => {
     const { type } = useParams();
     const navigate = useNavigate();
-    const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: accommodationsData, error: accommodationsError } = useSWR<{ data: Accommodation[] }>(type ? `accommodations-${type}` : null, () => api.accommodations.getByType(type!));
+    const accommodations = accommodationsData?.data || [];
+    const loading = !accommodationsData && !accommodationsError;
 
     const typeInfo: Record<string, { title: string; description: string }> = {
         'lodges': {
@@ -45,23 +46,6 @@ const AccommodationCategory = () => {
         title: "Accommodation",
         description: "Find the perfect place to stay during your safari."
     };
-
-    useEffect(() => {
-        const fetchAccommodations = async () => {
-            if (!type) return;
-            try {
-                setLoading(true);
-                const response = await api.accommodations.getByType(type);
-                setAccommodations(response.data || []);
-            } catch (error) {
-                console.error('Error fetching accommodations:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAccommodations();
-    }, [type]);
 
     return (
         <Layout>

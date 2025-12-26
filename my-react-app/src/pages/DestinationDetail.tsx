@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, Info, MapPin, Send } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
 import Button from '@/components/ui/Button';
-import { destinationsData, DestinationData, PlaceToVisit } from '@/data/destinations';
+import api from '@/lib/api';
+import { Destination, PlaceToVisit } from '@/types';
 import { getWhatsAppLink } from '@/lib/utils';
 
 const DestinationDetail = () => {
     const { id } = useParams<{ id: string }>();
-    const [destination, setDestination] = useState<DestinationData | null>(null);
-    const [loading, setLoading] = useState(true);
+    const { data: destinationData, error: destinationError } = useSWR<{ data: Destination }>(id ? `destination-${id}` : null, () => api.destinations.getById(id!));
+    const destination = destinationData?.data || null;
+    const loading = !destinationData && !destinationError;
 
     // Form State
     const [formData, setFormData] = useState({
@@ -19,17 +22,6 @@ const DestinationDetail = () => {
         email: '',
         message: ''
     });
-
-    useEffect(() => {
-        // Simulate loading for smoother transition
-        setLoading(true);
-        if (id && destinationsData[id]) {
-            setDestination(destinationsData[id]);
-        } else {
-            setDestination(null);
-        }
-        setLoading(false);
-    }, [id]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -94,17 +86,19 @@ const DestinationDetail = () => {
                             </p>
 
                             {/* Highlights */}
-                            <div className="mb-12">
-                                <h3 className="text-2xl font-bold mb-6">Highlights</h3>
-                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {destination.highlights.map((highlight: string, index: number) => (
-                                        <li key={index} className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg">
-                                            <div className="w-2 h-2 bg-primary rounded-full shrink-0" />
-                                            <span>{highlight}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {destination.highlights && destination.highlights.length > 0 && (
+                                <div className="mb-12">
+                                    <h3 className="text-2xl font-bold mb-6">Highlights</h3>
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {destination.highlights.map((highlight: string, index: number) => (
+                                            <li key={index} className="flex items-center gap-3 text-gray-700 bg-gray-50 p-3 rounded-lg">
+                                                <div className="w-2 h-2 bg-primary rounded-full shrink-0" />
+                                                <span>{highlight}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
 
                             {/* Places to Visit (Blog Style) */}
                             {destination.placesToVisit && destination.placesToVisit.length > 0 && (
@@ -139,39 +133,41 @@ const DestinationDetail = () => {
                         {/* Sidebar */}
                         <div className="space-y-8">
                             {/* Practical Info */}
-                            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                                <h3 className="text-xl font-serif font-bold mb-6 border-b pb-2">Practical Info</h3>
-                                <div className="space-y-6">
-                                    <div className="flex gap-4">
-                                        <Calendar className="text-primary shrink-0" />
-                                        <div>
-                                            <h4 className="font-bold text-sm">Best Time to Visit</h4>
-                                            <p className="text-sm text-gray-600">{destination.practicalInfo.bestTime}</p>
+                            {destination.practicalInfo && (
+                                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                                    <h3 className="text-xl font-serif font-bold mb-6 border-b pb-2">Practical Info</h3>
+                                    <div className="space-y-6">
+                                        <div className="flex gap-4">
+                                            <Calendar className="text-primary shrink-0" />
+                                            <div>
+                                                <h4 className="font-bold text-sm">Best Time to Visit</h4>
+                                                <p className="text-sm text-gray-600">{destination.practicalInfo.bestTime || 'Contact us'}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <Info className="text-primary shrink-0" />
-                                        <div>
-                                            <h4 className="font-bold text-sm">Visa Info</h4>
-                                            <p className="text-sm text-gray-600">{destination.practicalInfo.visaInfo}</p>
+                                        <div className="flex gap-4">
+                                            <Info className="text-primary shrink-0" />
+                                            <div>
+                                                <h4 className="font-bold text-sm">Visa Info</h4>
+                                                <p className="text-sm text-gray-600">{destination.practicalInfo.visaInfo || 'Contact us'}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-6 h-6 flex items-center justify-center font-bold text-primary text-xs border border-primary rounded-full">C</div>
-                                        <div>
-                                            <h4 className="font-bold text-sm">Currency</h4>
-                                            <p className="text-sm text-gray-600">{destination.practicalInfo.currency}</p>
+                                        <div className="flex gap-4">
+                                            <div className="w-6 h-6 flex items-center justify-center font-bold text-primary text-xs border border-primary rounded-full">C</div>
+                                            <div>
+                                                <h4 className="font-bold text-sm">Currency</h4>
+                                                <p className="text-sm text-gray-600">{destination.practicalInfo.currency || 'Contact us'}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="flex gap-4">
-                                        <div className="w-6 h-6 flex items-center justify-center font-bold text-primary text-xs border border-primary rounded-full">L</div>
-                                        <div>
-                                            <h4 className="font-bold text-sm">Language</h4>
-                                            <p className="text-sm text-gray-600">{destination.practicalInfo.language}</p>
+                                        <div className="flex gap-4">
+                                            <div className="w-6 h-6 flex items-center justify-center font-bold text-primary text-xs border border-primary rounded-full">L</div>
+                                            <div>
+                                                <h4 className="font-bold text-sm">Language</h4>
+                                                <p className="text-sm text-gray-600">{destination.practicalInfo.language || 'Contact us'}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Inquiry Form */}
                             <div className="bg-primary/5 p-6 rounded-xl border border-primary/10 sticky top-24">

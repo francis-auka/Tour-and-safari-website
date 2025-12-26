@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
@@ -9,26 +9,11 @@ import { Tour } from '@/types';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 
 const Tours = () => {
-    const [tours, setTours] = useState<Tour[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchTours = async () => {
-            try {
-                setLoading(true);
-                const response = await api.tours.getAll();
-                setTours(response.data || []);
-            } catch (err) {
-                console.error('Error fetching tours:', err);
-                setError((err as Error).message || 'Failed to load tours');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTours();
-    }, []);
+    const { data: toursData, error: toursError } = useSWR<{ data: Tour[] }>('tours', () => api.tours.getAll());
+    const tours = toursData?.data || [];
+    const loading = !toursData && !toursError;
+    const error = toursError ? (toursError as Error).message || 'Failed to load tours' : null;
 
     if (loading) {
         return <LoadingScreen />;

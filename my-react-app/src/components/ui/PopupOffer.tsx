@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { X } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import api from '@/lib/api';
@@ -9,27 +10,19 @@ const PopupOffer = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [offer, setOffer] = useState<PopupOfferType | null>(null);
 
-    useEffect(() => {
-        const fetchOffer = async () => {
-            try {
-                const response = await api.popup.getActive();
-                if (response.data) {
-                    const activeOffer = response.data;
-                    // Check if already seen in this session
-                    const seenOffer = sessionStorage.getItem(`seen_offer_${activeOffer._id}`);
-                    if (!seenOffer) {
-                        setOffer(activeOffer);
-                        // Small delay before showing
-                        setTimeout(() => setIsOpen(true), 2000);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching popup offer:', error);
-            }
-        };
+    const { data: activeOffer } = useSWR('popupOffer', () => api.popup.getActive().then(res => res.data));
 
-        fetchOffer();
-    }, []);
+    useEffect(() => {
+        if (activeOffer) {
+            // Check if already seen in this session
+            const seenOffer = sessionStorage.getItem(`seen_offer_${activeOffer._id}`);
+            if (!seenOffer) {
+                setOffer(activeOffer);
+                // Small delay before showing
+                setTimeout(() => setIsOpen(true), 2000);
+            }
+        }
+    }, [activeOffer]);
 
     const handleClose = () => {
         setIsOpen(false);

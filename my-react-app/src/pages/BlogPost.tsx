@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { useParams, Link } from 'react-router-dom';
 import { Calendar, User, Clock, Share2, ArrowLeft } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
@@ -9,28 +9,10 @@ import { BlogPost as BlogPostType } from '@/types';
 
 const BlogPost = () => {
     const { id } = useParams();
-    const [post, setPost] = useState<BlogPostType | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchPost = async () => {
-            if (!id) return;
-
-            try {
-                setLoading(true);
-                const response = await api.blog.getById(id);
-                setPost(response.data);
-            } catch (err) {
-                console.error('Error fetching blog post:', err);
-                setError((err as Error).message || 'Failed to load blog post');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPost();
-    }, [id]);
+    const { data: postData, error: postError } = useSWR<{ data: BlogPostType }>(id ? `blog-${id}` : null, () => api.blog.getById(id!));
+    const post = postData?.data || null;
+    const loading = !postData && !postError;
+    const error = postError ? (postError as Error).message || 'Failed to load blog post' : null;
 
     if (loading) {
         return (

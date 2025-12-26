@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Clock, Users, MapPin, Check, X, Calendar, Star } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
@@ -13,27 +13,12 @@ import { Tour } from '@/types';
 const TourDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [tour, setTour] = useState<Tour | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchTour = async () => {
-            if (!id) return;
-            try {
-                setLoading(true);
-                const response = await api.tours.getById(id);
-                setTour(response.data);
-            } catch (err) {
-                console.error("Error fetching tour:", err);
-                setError("Failed to load tour details.");
-            } finally {
-                setLoading(false);
-            }
-        };
 
-        fetchTour();
-    }, [id]);
+    const { data: tourData, error: tourError } = useSWR<{ data: Tour }>(id ? `tour-${id}` : null, () => api.tours.getById(id!));
+    const tour = tourData?.data || null;
+    const loading = !tourData && !tourError;
+    const error = tourError ? "Failed to load tour details." : null;
 
     const handleBooking = (e: React.FormEvent) => {
         e.preventDefault();

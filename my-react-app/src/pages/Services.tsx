@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+import api from '@/lib/api';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
@@ -19,57 +20,9 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 const Services = () => {
-    const [services, setServices] = useState<Service[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    const servicesList = [
-        {
-            _id: '1',
-            title: 'Airticketing',
-            slug: { current: 'airticketing' },
-            description: 'Best flight deals and seamless booking experiences for international and local travel.',
-            icon: 'Plane',
-            features: ['International Flights', 'Local Flights', 'Best Price Guarantee', '24/7 Support']
-        },
-        {
-            _id: '2',
-            title: 'Hotel Booking',
-            slug: { current: 'hotel-booking' },
-            description: 'Luxury accommodations in the heart of nature, from bush camps to 5-star resorts.',
-            icon: 'Hotel',
-            features: ['Luxury Resorts', 'Bush Camps', 'City Hotels', 'Best Rates']
-        },
-        {
-            _id: '3',
-            title: 'Transport Services',
-            slug: { current: 'transport-services' },
-            description: 'Comfortable and reliable transport solutions for your entire journey.',
-            icon: 'Car',
-            features: ['Airport Transfers', 'Safari Jeeps', 'Car Hire', 'Professional Drivers']
-        },
-        {
-            _id: '4',
-            title: 'Visa Applications',
-            slug: { current: 'visa-applications' },
-            description: 'Hassle-free visa assistance to ensure smooth entry into your destination.',
-            icon: 'Shield',
-            features: ['Visa Advice', 'Application Assistance', 'Document Review', 'Fast Processing']
-        },
-        {
-            _id: '5',
-            title: 'Custom Itineraries',
-            slug: { current: 'custom-itineraries' },
-            description: 'Tailor-made packages designed specifically for your unique preferences and budget.',
-            icon: 'Map',
-            features: ['Personalized Planning', 'Flexible Schedules', 'Expert Advice', 'Unique Experiences']
-        }
-    ];
-
-    useEffect(() => {
-        // Simulate loading for smooth UX or just set immediately
-        setServices(servicesList);
-        setLoading(false);
-    }, []);
+    const { data: servicesData, error: servicesError } = useSWR<{ data: Service[] }>('services', () => api.services.getAll());
+    const services = servicesData?.data || [];
+    const loading = !servicesData && !servicesError;
 
     return (
         <Layout>

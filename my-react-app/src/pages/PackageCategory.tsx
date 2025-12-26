@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { useParams } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
@@ -9,8 +9,9 @@ import { Package } from '@/types';
 
 const PackageCategory = () => {
     const { category } = useParams();
-    const [packages, setPackages] = useState<Package[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: packagesData, error: packagesError } = useSWR<{ data: Package[] }>(category ? `packages-${category}` : null, () => api.packages.getByCategory(category!));
+    const packages = packagesData?.data || [];
+    const loading = !packagesData && !packagesError;
 
     // Mapping slug to readable title and description (fallback/static info)
     const categoryInfo: Record<string, { title: string; description: string }> = {
@@ -44,23 +45,6 @@ const PackageCategory = () => {
         title: "Themed Packages",
         description: "Explore our wide range of curated travel packages."
     };
-
-    useEffect(() => {
-        const fetchPackages = async () => {
-            if (!category) return;
-            try {
-                setLoading(true);
-                const response = await api.packages.getByCategory(category);
-                setPackages(response.data || []);
-            } catch (error) {
-                console.error('Error fetching packages:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPackages();
-    }, [category]);
 
     return (
         <Layout>

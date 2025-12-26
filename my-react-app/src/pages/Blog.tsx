@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
 import Section from '@/components/ui/Section';
@@ -10,27 +10,10 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 import { BlogPost } from '@/types';
 
 const Blog = () => {
-    const [posts, setPosts] = useState<BlogPost[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                setLoading(true);
-                const response = await api.blog.getAll();
-                console.log('Blog Posts:', response.data);
-                setPosts(response.data || []);
-            } catch (err) {
-                console.error('Error fetching blog posts:', err);
-                setError((err as Error).message || 'Failed to load blog posts');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPosts();
-    }, []);
+    const { data: postsData, error: postsError } = useSWR<{ data: BlogPost[] }>('blog', () => api.blog.getAll());
+    const posts = postsData?.data || [];
+    const loading = !postsData && !postsError;
+    const error = postsError ? (postsError as Error).message || 'Failed to load blog posts' : null;
 
     if (loading) {
         return <LoadingScreen />;

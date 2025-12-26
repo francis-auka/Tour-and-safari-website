@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { useParams, useNavigate } from 'react-router-dom';
 import Layout from '@/components/layout/Layout';
 import Container from '@/components/ui/Container';
@@ -13,27 +13,10 @@ import LoadingScreen from '@/components/ui/LoadingScreen';
 const AccommodationDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [accommodation, setAccommodation] = useState<Accommodation | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        const fetchAccommodation = async () => {
-            if (!id) return;
-            try {
-                setLoading(true);
-                const response = await api.accommodations.getById(id);
-                setAccommodation(response.data);
-            } catch (err) {
-                console.error('Error fetching accommodation:', err);
-                setError('Failed to load accommodation details.');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchAccommodation();
-    }, [id]);
+    const { data: accommodationData, error: accommodationError } = useSWR<{ data: Accommodation }>(id ? `accommodation-${id}` : null, () => api.accommodations.getById(id!));
+    const accommodation = accommodationData?.data || null;
+    const loading = !accommodationData && !accommodationError;
+    const error = accommodationError ? (accommodationError as Error).message || 'Failed to load accommodation details.' : null;
 
     if (loading) return <LoadingScreen />;
 

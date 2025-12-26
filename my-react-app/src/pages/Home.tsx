@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import { ChevronLeft, ChevronRight, Tag, Handshake } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
 import Section from '@/components/ui/Section';
@@ -18,7 +19,7 @@ import { Tour, HotDeal } from '@/types';
 const Home = () => {
     const [tours, setTours] = useState<Tour[]>([]);
     const [hotDeals, setHotDeals] = useState<HotDeal[]>([]);
-    const [loading, setLoading] = useState(true);
+
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const slides = [
@@ -97,34 +98,25 @@ const Home = () => {
         setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
+    const { data: toursData, error: toursError } = useSWR('tours', () => api.tours.getAll().then(res => res.data));
+    const { data: hotDealsData, error: hotDealsError } = useSWR('hotDeals', () => api.hotDeals.getAll().then(res => res.data));
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [toursRes, hotDealsRes] = await Promise.all([
-                    api.tours.getAll(),
-                    api.hotDeals.getAll()
-                ]);
+        if (toursData) {
+            // Get featured tours or first 3
+            const allTours = toursData || [];
+            const featuredTours = allTours.filter((t: Tour) => t.featured).slice(0, 3);
+            setTours(featuredTours.length > 0 ? featuredTours : allTours.slice(0, 3));
+        }
+    }, [toursData]);
 
-                // Get featured tours or first 3
-                const allTours = toursRes.data || [];
-                const featuredTours = allTours.filter((t: Tour) => t.featured).slice(0, 3);
-                setTours(featuredTours.length > 0 ? featuredTours : allTours.slice(0, 3));
+    useEffect(() => {
+        if (hotDealsData) {
+            setHotDeals(hotDealsData || []);
+        }
+    }, [hotDealsData]);
 
-                // Get Hot Deals
-                setHotDeals(hotDealsRes.data || []);
-
-                console.log('Tours:', toursRes.data);
-                console.log('Hot Deals:', hotDealsRes.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                // Keep empty arrays on error
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const loading = (!toursData && !toursError) || (!hotDealsData && !hotDealsError);
 
     if (loading) {
         return <LoadingScreen />;
